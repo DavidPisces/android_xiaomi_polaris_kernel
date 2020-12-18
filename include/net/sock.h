@@ -6,6 +6,7 @@
  *		Definitions for the AF_INET socket handler.
  *
  * Version:	@(#)sock.h	1.0.4	05/13/93
+ * Copyright (C) 2019 XiaoMi, Inc.
  *
  * Authors:	Ross Biro
  *		Fred N. van Kempen, <waltje@uWalt.NL.Mugnet.ORG>
@@ -421,6 +422,7 @@ struct sock {
 	__u32			sk_priority;
 	__u32			sk_mark;
 	kuid_t			sk_uid;
+	pid_t			pid_num;
 	struct pid		*sk_peer_pid;
 	const struct cred	*sk_peer_cred;
 	long			sk_rcvtimeo;
