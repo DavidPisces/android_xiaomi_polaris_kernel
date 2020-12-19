@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2003-2006, Cluster File Systems, Inc, info@clusterfs.com
+ * Copyright (C) 2020 XiaoMi, Inc.
  * Written by Alex Tomas <alex@clusterfs.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -5267,6 +5268,10 @@ int ext4_trim_fs(struct super_block *sb, struct fstrim_range *range,
 	end = EXT4_CLUSTERS_PER_GROUP(sb) - 1;
 
 	for (group = first_group; group <= last_group; group++) {
+		if (signal_pending(current) && sigismember(&current->pending.signal, SIGUSR1)) {
+			ret = -EINTR;
+			break;
+		}
 		grp = ext4_get_group_info(sb, group);
 		/* We only do this if the grp has never been initialized */
 		if (unlikely(EXT4_MB_GRP_NEED_INIT(grp))) {
