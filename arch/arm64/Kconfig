@@ -1453,4 +1453,11 @@ config MACH_XIAOMI_E5
 
 endmenu
 
+config VENDOR_XIAOMI
+       bool "Xiaomi Hardware Kernel"
+       default n
+       depends on MACH_XIAOMI
+       help
+        Set the configuration and kernel available for a separate MIUI.
+
 endmenu
