@@ -102,6 +102,7 @@ struct rmidev_handle {
 	struct kobject *sysfs_dir;
 	struct siginfo interrupt_signal;
 	struct siginfo terminate_signal;
+	struct task_struct *task;
 	void *data;
 	bool concurrent;
 };
@@ -396,7 +397,8 @@ static ssize_t rmidev_sysfs_pid_store(struct device *dev,
 	rmidev->pid = input;
 
 	if (rmidev->pid) {
-		if (!pid_task(find_vpid(rmidev->pid), PIDTYPE_PID)) {
+		rmidev->task = pid_task(find_vpid(rmidev->pid), PIDTYPE_PID);
+		if (!rmidev->task) {
 			dev_err(rmi4_data->pdev->dev.parent,
 					"%s: Failed to locate PID of data logging tool\n",
 					__func__);
@@ -418,14 +420,8 @@ static ssize_t rmidev_sysfs_term_store(struct device *dev,
 	if (input != 1)
 		return -EINVAL;
 
-	if (rmidev->pid) {
-		struct task_struct *task;
-		rcu_read_lock();
-		task = pid_task(find_vpid(rmidev->pid), PIDTYPE_PID);
-		if (task)
-			send_sig_info(SIGTERM, &rmidev->terminate_signal, task);
-		rcu_read_unlock();
-	}
+	if (rmidev->pid)
+		send_sig_info(SIGTERM, &rmidev->terminate_signal, rmidev->task);
 
 	return count;
 }
@@ -797,14 +793,8 @@ static void rmidev_attn(struct synaptics_rmi4_data *rmi4_data,
 	if (!rmidev)
 		return;
 
-	if (rmidev->pid && (rmidev->intr_mask & intr_mask)) {
-		struct task_struct *task;
-		rcu_read_lock();
-		task = pid_task(find_vpid(rmidev->pid), PIDTYPE_PID);
-		if (task)
-			send_sig_info(SIGIO, &rmidev->interrupt_signal, task);
-		rcu_read_unlock();
-	}
+	if (rmidev->pid && (rmidev->intr_mask & intr_mask))
+		send_sig_info(SIGIO, &rmidev->interrupt_signal, rmidev->task);
 
 	return;
 }
