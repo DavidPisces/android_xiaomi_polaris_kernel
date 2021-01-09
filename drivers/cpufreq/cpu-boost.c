@@ -23,15 +23,6 @@
 #include <linux/input.h>
 #include <linux/time.h>
 
-/* ADD:TEST CPU-BOOST */
-#define DYN_CPU_BOOST 0
-/* END:TEST CPU-BOOST */
-/* ADD:TEST CPU-BOOST */
-#if DYN_CPU_BOOST
-#define DYN_INPUT_WINDOW_EVENT (80 * USEC_PER_MSEC)
-#endif
-/* END:TEST CPU-BOOST */
-
 struct cpu_sync {
 	int cpu;
 	unsigned int input_boost_min;
@@ -239,15 +230,7 @@ static void cpuboost_input_event(struct input_handle *handle,
 		return;
 
 	now = ktime_to_us(ktime_get());
-
-/* ADD:TEST CPU-BOOST */
-#if DYN_CPU_BOOST
-	if (now - last_input_time < DYN_INPUT_WINDOW_EVENT)
-/* ELSE:TEST CPU-BOOST */
-#else
 	if (now - last_input_time < MIN_INPUT_INTERVAL)
-#endif
-/* END:TEST CPU-BOOST */
 		return;
 
 	if (work_pending(&input_boost_work))
