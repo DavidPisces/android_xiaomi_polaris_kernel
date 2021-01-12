@@ -1,0 +1,30 @@
+###### Stic-Builder-Jenkins ######
+devices = polaris
+defconfig_a = polaris_defconfig,polaris_user_defconfig
+aosp_defconfig_b = polaris_defconfig,polaris_user_defconfig
+host = Tianjin-stic-server-open-host (builder@stic-server-sq183)
+toolchain = /home/work/devices/sdm845/android_xiaomi_sdm845_kernel/toolchain/
+clang = <toolchain>/clang/proton-clang/bin/clang
+clang_a = <toolchain>/clang/google-clang/bin/clang
+gcc = <toolchain>/stic-gcc/bin/
+gcc_a = <toolchain>/google-gcc/bin/
+aarch64_gcc = <gcc>/aarch64-linux-gnu-
+aarch64_gcc_a = <gcc>/aarch64-linux-androidkernel-
+arm32_gcc = <gcc>/arm-linux-gnueabi-
+arm32_gcc_a = <gcc>/arm-linux-androidkernel-
+dtbo = <toolchain>/aosp-dtc
+lto = <default = true>,<aosp,aosp_a = false>
+text = "正在编译小米MIX 2S <type>"
+text_a = "正在编译小米MIX 2S <type>"
+aosp_text = "正在编译小米MIX 2S <type>"
+aosp_text_a = "正在编译小米MIX 2S <type>"
+error = "由于服务器硬盘空间不足,无法编译出包,暂停发布"
+error_a = "由于服务器硬盘空间不足,无法编译出包,暂停发布"
+aosp_text_error = "由于服务器硬盘空间不足,无法编译出包,暂停发布"
+aosp_text_error_a = "由于服务器硬盘空间不足,无法编译出包,暂停发布"
+out = /home/work/devices/sdm845/android_xiaomi_sdm845_kernel/out/default/PaperKernel-<devices>-<version>-<md5>.zip
+out_a = /home/work/devices/sdm845/android_xiaomi_sdm845_kernel/out/paper_bootimage.img
+out_aosp = /home/work/devices/sdm845/android_xiaomi_sdm845_kernel/out/boot.img
+dtbo_out = /home/work/devices/sdm845/android_xiaomi_sdm845_kernel/out/dtbo.img
+dtbo_a_out = <dtbo_out>../aosp_out/dtbo.img阿
+###### Stic-Builder-Jenkins ######
